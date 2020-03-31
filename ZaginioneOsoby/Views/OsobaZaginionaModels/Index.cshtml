@@ -1,0 +1,113 @@
+﻿@model IEnumerable<ZaginioneOsoby.Models.OsobaZaginionaModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<form asp-controller="OsobaZaginionaModels" asp-action="Index" asp-area="" method="get">
+    <p>
+        Nazwa Województwa:<select type="text" name="Nazwawojewodztwo" asp-items="Html.GetEnumSelectList<OsobaZaginionaModel.ProvicesList>()">
+             <option selected="selected" value="">Province Filtr</option>
+             </select>
+        Plec:<select type="text" name="plec" asp-items="Html.GetEnumSelectList<OsobaZaginionaModel.PlecList>()">
+             <option selected="selected" value="">Sex Filtr</option>
+             </select>
+        <input type="submit"  value="Filter"/>
+    </p>
+    
+</form>
+
+<p>
+    @if (User.Identity.IsAuthenticated)
+	{
+    <a asp-action="Create">Create New</a>      
+    }
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                PHOTO
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Surrname)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MissingDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Age)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Provices)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Sex)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.HairColor)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Height)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Descprition)
+            </th>
+            <th>
+                OPERATION
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                <img src="~/img/@item.FileName" alt="IMAGES" width="80" height="100" />
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Surrname)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MissingDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Age)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Provices)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Sex)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.HairColor)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Height)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Descprition)
+            </td>         
+            <td>
+                @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                {
+                    <a asp-action="Edit" asp-route-id="@item.OsobaZaginionaId">Edit</a>
+                }
+                <a asp-action="Details" asp-route-id="@item.OsobaZaginionaId">Details</a>
+                @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                {
+                    <a asp-action="Delete" asp-route-id="@item.OsobaZaginionaId">Delete</a>
+                }
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

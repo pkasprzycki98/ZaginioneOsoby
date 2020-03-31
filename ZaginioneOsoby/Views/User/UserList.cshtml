@@ -1,0 +1,54 @@
+﻿@model IEnumerable<ZaginioneOsoby.Models.UserModel>
+@{
+    ViewData["Title"] = "UserList";
+}
+
+<h1>UserList</h1>
+
+
+<table class="table">
+ <thead>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.UserName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Email)
+        </th>
+        <th>
+            Rola
+        </th>
+    </tr>
+  </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>               
+                    <form asp-action="UpdateUserRole">                      
+                        <input  name="username" style="display:none" value="@item.UserName"/>
+                        <select  name="rola">    
+                            @if (item.role == UserModel.Role.Admin)
+							{
+                                <option  selected="selected" value="Admin">Admin</option>
+                                <option value="User">User</option>
+							}
+							else
+							{
+                                <option value="Admin">Admin</option>
+                                <option selected="selected" value="User">User</option>
+                            }
+                        </select>
+                         <input type="submit" value="Zmień" />
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
