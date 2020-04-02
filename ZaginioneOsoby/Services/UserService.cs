@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,7 @@ namespace ZaginioneOsoby.Services
 			_dbContext = dbContext;
 			_userManager = userManager;
 			_roleManager = roleManager;
-			_signInManager = signInManager;
+			_signInManager = signInManager;	
 		}
 		public async Task<bool> Login(string username, string password)
 		{
@@ -37,6 +38,7 @@ namespace ZaginioneOsoby.Services
 			}
 
 			var result = await _signInManager.PasswordSignInAsync(user.UserName, password, true, true); // logowanie
+			
 
 			if (result.Succeeded)
 			{
@@ -47,7 +49,7 @@ namespace ZaginioneOsoby.Services
 
 		}
 
-		public async Task<bool> Register(string username, string email, string password)
+		public async Task<bool> Register(string UserName, string Email, string password) 
 		{
 			string user_role = "User";
 
@@ -61,8 +63,8 @@ namespace ZaginioneOsoby.Services
 			UserModel user = new UserModel
 			{
 				SecurityStamp = Guid.NewGuid().ToString(),
-				UserName = username,
-				Email = email,
+				UserName = UserName,
+				Email = Email,
 				role = UserModel.Role.User
 			};
 			await _userManager.CreateAsync(user, password);

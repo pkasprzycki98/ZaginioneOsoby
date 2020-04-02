@@ -9,10 +9,10 @@
 <form asp-controller="OsobaZaginionaModels" asp-action="Index" asp-area="" method="get">
     <p>
         Nazwa Województwa:<select type="text" name="Nazwawojewodztwo" asp-items="Html.GetEnumSelectList<OsobaZaginionaModel.ProvicesList>()">
-             <option selected="selected" value="">Province Filtr</option>
+             <option value="">Province Filtr</option>
              </select>
         Plec:<select type="text" name="plec" asp-items="Html.GetEnumSelectList<OsobaZaginionaModel.PlecList>()">
-             <option selected="selected" value="">Sex Filtr</option>
+             <option  value="">Sex Filtr</option>
              </select>
         <input type="submit"  value="Filter"/>
     </p>
@@ -48,16 +48,7 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Sex)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.HairColor)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Height)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Descprition)
-            </th>
+            </th>           
             <th>
                 OPERATION
             </th>
@@ -86,16 +77,7 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Sex)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.HairColor)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Height)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Descprition)
-            </td>         
+            </td>      
             <td>
                 @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
                 {

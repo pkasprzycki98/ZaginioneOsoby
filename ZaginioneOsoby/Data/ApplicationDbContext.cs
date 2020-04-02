@@ -16,7 +16,5 @@ namespace ZaginioneOsoby.Data
 		}
 
 		public DbSet<OsobaZaginionaModel> OsobyZaginione { get; set; }
-
-		public DbSet<ZaginioneOsoby.Models.Place> Place { get; set; }
 	}
 }

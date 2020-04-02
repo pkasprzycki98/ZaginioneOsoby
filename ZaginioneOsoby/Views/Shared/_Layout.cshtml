@@ -25,8 +25,20 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="OsobaZaginionaModels" asp-action="Index">Lista Osób zaginionych </a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="OsobaZaginionaModels" asp-action="Index">Zagninieni</a>
                         </li>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="OsobaZaginionaModels" asp-action="UserIndex">Twoje zgłoszenia</a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="UserList">Zarządzaj</a>
+                            </li>
+                        }
                     </ul>
 
                 </div>

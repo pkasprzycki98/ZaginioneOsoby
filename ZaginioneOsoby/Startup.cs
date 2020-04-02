@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -38,19 +40,53 @@ namespace ZaginioneOsoby
 
 			services.Configure<PasswordHasherOptions>(options => options.CompatibilityMode = PasswordHasherCompatibilityMode.IdentityV2);
 
+
+
 			services.AddIdentity<UserModel, IdentityRole>(opts =>
 			{
-				opts.Password.RequireDigit = true;
+				opts.SignIn.RequireConfirmedAccount = true;
+				opts.Password.RequireDigit = false;
 				opts.Password.RequiredLength = 7;
-				opts.Password.RequireLowercase = true;
+				opts.Password.RequireLowercase = false;
 				opts.Password.RequireNonAlphanumeric = false;
-				opts.Password.RequireUppercase = true;
-			}).AddEntityFrameworkStores<ApplicationDbContext>();
+				opts.Password.RequireUppercase = false;
+			}).AddRoles<IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
 
+
+
+			services.Configure<IdentityOptions>(options =>
+			{
+				// Password settings.
+				options.Password.RequireDigit = true;
+				options.Password.RequireLowercase = true;		
+				options.Password.RequireUppercase = true;
+				options.Password.RequiredLength = 6;
+
+				// Lockout settings.
+				options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+				options.Lockout.MaxFailedAccessAttempts = 5;
+				options.Lockout.AllowedForNewUsers = true;
+
+				// User settings.
+				options.User.AllowedUserNameCharacters =
+				"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+				options.User.RequireUniqueEmail = false;
+			});
+			services.ConfigureApplicationCookie(options =>
+			{
+				// Cookie settings
+				options.Cookie.HttpOnly = true;
+				options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+
+				options.LoginPath = "/User/Login";
+				options.AccessDeniedPath = "/Home/Index/AccessDenied";
+				options.SlidingExpiration = true;
+			});
 			services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 			services.AddScoped<IUserService, UserService>();
 		}
+
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -72,8 +108,12 @@ namespace ZaginioneOsoby
 			
 			app.UseRouting();
 
-			app.UseAuthorization();
+
+
+
+
 			app.UseAuthentication();
+			app.UseAuthorization();
 
 			app.UseEndpoints(endpoints =>
 			{

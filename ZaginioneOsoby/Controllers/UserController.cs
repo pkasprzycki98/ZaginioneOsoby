@@ -48,19 +48,27 @@ namespace ZaginioneOsoby.Controllers
             return View();
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register([Bind("username,email,password")] UserViewModel model)
         {
-            var succes = await _userService.Register(model.username, model.email, model.password);
 
-            if (succes == false)
+            if (ModelState.IsValid)
             {
-                return new UnauthorizedResult();
+                var succes = await _userService.Register(model.username, model.email, model.password);
+
+                if (succes == false)
+                {
+                    return new UnauthorizedResult();
+                }
+                else
+                {
+                    await _userService.Login(model.username, model.password);                    
+                    return RedirectToAction("Index", "Home");
+                }
             }
             else
-            {
-                await _userService.Login(model.username, model.password);
-                return RedirectToAction("Index", "Home");
-            }
+                return View(model);
+           
         }
 
         public async Task<IActionResult> Logout()
@@ -81,36 +89,42 @@ namespace ZaginioneOsoby.Controllers
             var user = _dbContext.Users.FirstOrDefault(model => model.UserName == username);
 
 
-            if (User.IsInRole("Moderator") || User.IsInRole("User") && user.role == UserModel.Role.Admin)
+            if (User.IsInRole("Admin")) // if (User.IsInRole("Moderator") || User.IsInRole("User") && user.role == UserModel.Role.Admin)
             {
-                return BadRequest("Admin pls dont touch");
-            }
+
 
                 if (user.role == UserModel.Role.Admin)
-            {
-                await _userManager.RemoveFromRoleAsync(user, "Admin");
-                await _userManager.RemoveFromRoleAsync(user, "User");
-            }
-            else if (user.role == UserModel.Role.User)
-            {
-                await _userManager.RemoveFromRoleAsync(user, "User");
-            }
-            if (rola == UserModel.Role.User)
-            {
-                user.role = UserModel.Role.User;
-                await _userManager.AddToRoleAsync(user, rola.ToString());
+                {
+                    await _userManager.RemoveFromRoleAsync(user, "Admin");
+                    await _userManager.RemoveFromRoleAsync(user, "User");
+                }
+                else if (user.role == UserModel.Role.User)
+                {
+                    await _userManager.RemoveFromRoleAsync(user, "User");
+                }
+                if (rola == UserModel.Role.User)
+                {
+                    user.role = UserModel.Role.User;
+                    await _userManager.AddToRoleAsync(user, rola.ToString());
 
-            }
-            if (rola == UserModel.Role.Admin)
-            {             
-                user.role = UserModel.Role.Admin;
-                await _userManager.AddToRoleAsync(user, "Admin");
-                await _userManager.AddToRoleAsync(user, "User");
-            }
+                }
+                if (rola == UserModel.Role.Admin)
+                {
+                    user.role = UserModel.Role.Admin;
+                    await _userManager.AddToRoleAsync(user, "Admin");
+                    await _userManager.AddToRoleAsync(user, "User");
+                }
 
-            return RedirectToAction("UserList");
-        }
+                return RedirectToAction("UserList");
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
+        } // to wrzycić do serwisu tak o
 
         
+
+
     }
 }

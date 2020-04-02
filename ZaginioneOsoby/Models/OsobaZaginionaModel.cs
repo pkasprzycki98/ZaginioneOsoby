@@ -12,7 +12,8 @@ namespace ZaginioneOsoby.Models
 	{
 		[Key]
 		public int OsobaZaginionaId { get; set; }
-		[Required]
+		public string UserId { get; set; }
+		[Required(ErrorMessage ="Dej byku name")]
 		public string Name { get; set; }
 		[Required]
 		public string Surrname { get; set; }
@@ -30,14 +31,16 @@ namespace ZaginioneOsoby.Models
 		public string City { get; set; }
 		public ProvicesList Provices { get; set; }
 		public string Street { get; set; }
-		
+
 		public string FileName { get; set; }
 		[Required]
 		[NotMapped]
 		public IFormFile PhotoUrl { get; set; }
 
-		public enum ProvicesList { Wszystkie, Dolnośląskie, KujawskoPomorskie, Lubelskie, Lubuskie, Łódzkie, Małopolskie, Mazowieckie, Opolskie, Podkarpackie, Podlaskie, Pomorskie, Śląskie, Świętkorzyskie, WarmińskoMazurskie, Wielkopolskie, Zachodniopomorskie }
-		public enum PlecList {Brak,M,K};
-		
+		public enum ProvicesList {Brak,Dolnośląskie, KujawskoPomorskie, Lubelskie, Lubuskie, Łódzkie, Małopolskie, Mazowieckie, Opolskie, Podkarpackie, Podlaskie, Pomorskie, Śląskie, Świętkorzyskie, WarmińskoMazurskie, Wielkopolskie, Zachodniopomorskie }
+		public enum PlecList { Brak, M, K };
+
+		[ForeignKey("UserId")]
+		public virtual UserModel User { get; set; }
 	}
 }

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ZaginioneOsoby.Data;
 
 namespace ZaginioneOsoby.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200402002050_UpdateUser")]
+    partial class UpdateUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -208,6 +210,16 @@ namespace ZaginioneOsoby.Migrations
                     b.ToTable("OsobyZaginione");
                 });
 
+            modelBuilder.Entity("ZaginioneOsoby.Models.Place", b =>
+                {
+                    b.Property<string>("PlaceId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("PlaceId");
+
+                    b.ToTable("Place");
+                });
+
             modelBuilder.Entity("ZaginioneOsoby.Models.UserModel", b =>
                 {
                     b.Property<string>("Id")
@@ -267,6 +279,10 @@ namespace ZaginioneOsoby.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
+
+                    b.Property<string>("password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("role")
                         .HasColumnType("int");
